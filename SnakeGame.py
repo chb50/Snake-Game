@@ -77,14 +77,7 @@ def game():
                 if event.key == pygame.K_DOWN and move_y != -block_size:
                     move_y = block_size
                     move_x = 0
-    ##        if event.type == pygame.KEYUP:
-    ##            #right now, if opposite keys are heald down and
-    ##            #one of those keys are released, then the rectangle
-    ##            #stops in place
-    ##            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-    ##                move_x = 0
-    ##            if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-    ##                move_y = 0
+    
         #updates coordinates of snake head
         place_x += move_x
         place_y += move_y
