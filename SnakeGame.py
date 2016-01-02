@@ -52,21 +52,24 @@ def start_menue():
     while starting:
         gameDisplay.fill(white)
         message_to_user("Cedric's Snake Game",
-                          green,
-                          y_displace = -120,
-                          size = "large")
+                            green,
+                            y_displace = -120,
+                            size = "large")
         message_to_user("The objective of the game is to eat red apples",
-                          black,
-                          y_displace = -70)
+                            black,
+                            y_displace = -70)
         message_to_user("The more apple you eat, the longer you become",
-                          black,
-                          y_displace = -40)
+                            black,
+                            y_displace = -40)
         message_to_user("If you run into yourself, or the boundaries, you lose!",
-                          black,
-                          y_displace = -10)
-        message_to_user("Press ENTER to continue or ESC to quit",
-                          black,
-                          y_displace = 50)
+                            black,
+                            y_displace = -10)
+        message_to_user("Press ENTER to play or ESC to quit",
+                            black,
+                            y_displace = 50)
+        message_to_user("Controls: use the arrow keys to move and SPACE to pause the game",
+                            black,
+                            y_displace = 200)
         pygame.display.update()
         clock.tick(15)
         for event in pygame.event.get():
