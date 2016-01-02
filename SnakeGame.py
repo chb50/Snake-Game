@@ -85,6 +85,7 @@ def start_menue():
 
 def pause():
     paused = True
+    return_to_start = False
     while paused:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -94,9 +95,9 @@ def pause():
                 if event.key == pygame.K_SPACE:
                     paused = False
                 if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    quit()
-##        gameDisplay.fill(white)
+                    return_to_start = True
+                    return return_to_start #used to return to start menue
+##        gameDisplay.fill(white) #if we want to hide the game from the user while paused
         message_to_user("Paused",
                           black,
                           y_displace = -100,
@@ -176,7 +177,10 @@ def game():
                     move_y = block_size
                     move_x = 0
                 if event.key == pygame.K_SPACE:
-                    pause()
+                    return_to_start = pause()
+                    if return_to_start == True:
+                        start_menue()
+                        game()
 
         
         #updates coordinates of snake head
