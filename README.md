@@ -3,9 +3,11 @@ Programmed in Python using pygame. This is a recreation of the classic game Snak
 
 #Installation
 Windows:
-This game was programmed using Python 3.4.2 and Pygame 1.9.2 for Windows 32 bit systems and Python version 3.2. There is no garuntee that this game will run for any other versions of Python and Pygame other than the versions previously stated. With that said, Python can be installed from https://www.python.org/downloads/ and pygame can be installed from http://www.pygame.org/download.shtml
+
+Python can be installed from [here] (https://www.python.org/downloads/) and pygame can be installed from [here] (http://www.pygame.org/download.shtml). once Python and Pygame is installed, this code can either be copied directly or pulled using the github GUI.
 
 Linux:
+
 Pygame can be installed from the terminal using the following command
 
 `sudo apt-get install python-pygame`
