@@ -7,7 +7,7 @@ display_width = 800
 display_height = 600
 
 gameDisplay = pygame.display.set_mode((display_width,display_height))
-pygame.display.set_caption('Practice Snake Game')
+pygame.display.set_caption('Cedric\'s Snake Game')
 #will be used to control frame rate of game
 clock = pygame.time.Clock()
 
