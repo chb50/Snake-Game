@@ -130,6 +130,7 @@ def game():
 
     pygame.quit()
 
+print(testHighScores(75))
 #run start menue
 start_menu()
 #runs the game
