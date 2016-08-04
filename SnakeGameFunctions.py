@@ -1,5 +1,8 @@
 import pygame
 import random
+import sqlite3
+import datetime
+import time
 from SnakeGameProperties import *
 
 def apple_spawn(apple_size): #inserting "block_size" as arguement currently
@@ -95,3 +98,95 @@ def pause():
                           size = 'small')
         pygame.display.update()
         clock.tick(15)
+
+#compare current score with scores stored within the database
+def getHighScores():
+    #Table will have: rank, name, date, score
+    connect = sqlite3.connect("SnakeGameDatabase.db")
+    c = connect.cursor()
+
+#returns true if high score is achieved, false otherwise
+def setHighScores(name, score):
+    connect = sqlite3.connect("SnakeGameDatabase.db")
+    c = connect.cursor()
+
+    date = str(datetime.datetime.fromtimestamp(time.time()).strftime('%m-%d-%Y %H:%M'))
+    isHighScore = False
+    maxTableSize = 5 #maximum # of high scores allowed on the table
+    rank = 1
+    
+    c.execute('CREATE TABLE IF NOT EXISTS highScores(rank INT, name TEXT, datestamp TEXT, score INT)')
+    c.execute('SELECT COUNT(*) FROM highScores')
+    currentSize = c.fetchone()[0] #should get the current table's size
+
+    if currentSize == 0:
+        c.execute('INSERT INTO highScores (rank, name, datestamp, score) VALUES (?, ?, ?, ?)',
+                  (rank, name, date, score))
+        connect.commit()
+        c.close()
+        connect.close()
+        return True
+    else:
+        prevRow = None
+        c.execute('SELECT * FROM highScores')
+        for row in c.fetchall():
+            if score > row[3]:
+                isHighScore = True
+                #add the data to the table
+                prevRow = row
+                c.execute('UPDATE highScores SET name = ?, datestamp = ?, score = ? WHERE rank = ?',
+                          (name, date, score, rank))
+                connect.commit()
+                #will need to push rows with lower score down, so we save the past high score to be placed in the row below
+                if rank >= maxTableSize:
+                    #if the max table size has been reached, disregard the lowest score (prevRow)
+                    c.close()
+                    connect.close()
+                    return True
+                name = prevRow[1]
+                date = prevRow[2]
+                score = prevRow[3]
+            rank += 1
+    print(rank)
+    #if the for loop ends, then this means one of 2 things:
+    #   1)the maximum rank allowed on the table was not reached,therefore, we need to insert the info of the lowest score on the high score board (prevRow)
+        #either the score has been inserted, and we need to move older high scores down
+        #or this score is the smallest of all scores, and we need to insert it below the previous lowest score
+    #   2)the score delivered as arguement to this function is lower than the lowest high score
+
+    if rank <= maxTableSize:
+        #name, date, score will come from either prevRow or current player that earned this high score spot
+        c.execute('INSERT INTO highScores (rank, name, datestamp, score) VALUES (?, ?, ?, ?)',
+              (rank, name, date, score))
+        connect.commit()
+        c.close()
+        connect.close()
+        return True
+    else:        
+        c.close()
+        connect.close()
+        return False
+
+
+    ## Have to account for
+    #   1) adding a row to an empty table
+    #   2) adding a row to a table that is currently not the maximum size allowed
+    #       will need to be able to save previous scores such that they can be moved down on the high score list
+    #   3) adding a row to a table that is the maximum size allowed
+    #       will have to delete the last member of the list of old high scores to make room for the new high score
+    #   4) not adding to the table (the score is too low)
+
+### ONLY FOR TESTING ###
+def clearDB():
+    connect = sqlite3.connect("SnakeGameDatabase.db")
+    c = connect.cursor()
+
+    c.execute("DELETE FROM highScores")
+    connect.commit()
+
+    c.close()
+    connect.close()
+
+
+    
+    
