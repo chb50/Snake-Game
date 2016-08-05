@@ -106,23 +106,23 @@ def singlePlayerClassicGame():
                     if event.key == pygame.K_SPACE:
                         singlePlayerClassicGame()
                 
-        #main event hadler clause
+        #main event hadler clause, controls are arrow keys
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 gameActive = False
             if event.type == pygame.KEYDOWN:
                 #the extra "and" statement keeps the player from
                 #backing the snake up into itself
-                if event.key == pygame.K_LEFT and playerSnake.xVel != block_size:
+                if event.key == pygame.K_LEFT and playerSnake.xVel != playerSnake.blockSize:
                     playerSnake.xVel = -block_size
                     playerSnake.yVel = 0
-                if event.key == pygame.K_RIGHT and playerSnake.xVel != -block_size:
+                if event.key == pygame.K_RIGHT and playerSnake.xVel != -playerSnake.blockSize:
                     playerSnake.xVel = block_size
                     playerSnake.yVel = 0
-                if event.key == pygame.K_UP and playerSnake.yVel != block_size:
+                if event.key == pygame.K_UP and playerSnake.yVel != playerSnake.blockSize:
                     playerSnake.yVel = -block_size
                     playerSnake.xVel = 0
-                if event.key == pygame.K_DOWN and playerSnake.yVel != -block_size:
+                if event.key == pygame.K_DOWN and playerSnake.yVel != -playerSnake.blockSize:
                     playerSnake.yVel = block_size
                     playerSnake.xVel = 0
                 if event.key == pygame.K_SPACE:

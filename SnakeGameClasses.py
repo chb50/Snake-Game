@@ -1,4 +1,5 @@
 #classes to describe sprites of game
+import pygame
 
 class Snake(object):
     def __init__(self, snakeList, snakeLength, blockSize,
