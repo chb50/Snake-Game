@@ -30,3 +30,23 @@ class Snake(object):
         
         #a png that could be used as the head of the snake
         self.img = img
+
+        #keeps track of how the snake should move based on user input
+        #appended to snakeList so the snake's position is updated on each frame
+        self.snakeHead = []
+
+    def snakeMovement(self):
+        #create new coordinates based on velocities (user input)
+        self.xCoord += self.xVel
+        self.yCoord += self.yVel
+        
+        #update snake head with new coordinants based on user input
+        self.snakeHead = []
+        self.snakeHead.append(self.xCoord)
+        self.snakeHead.append(self.yCoord)
+        self.snakeList.append(self.snakeHead)
+
+        #updates display to keep the snake at the correct size, rather
+        #than growing it indefinitely
+        if len(self.snakeList) > self.snakeLength:
+            del self.snakeList[0]

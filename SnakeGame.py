@@ -91,39 +91,26 @@ def singlePlayerClassicGame():
                         start_menu()
 
         ## UPDATING THE SNAKE ON EVERY FRAME ##
-                        
-        #updates coordinates of snake head
-        playerSnake.xCoord += playerSnake.xVel
-        playerSnake.yCoord += playerSnake.yVel
-
-        #append updated coordinates to snake list, to create the entire snake body
-        snakeHead = []
-        snakeHead.append(playerSnake.xCoord)
-        snakeHead.append(playerSnake.yCoord)
-        playerSnake.snakeList.append(snakeHead)
 
         #renders the game board and the apple
         gameDisplay.fill(white)
         gameDisplay.fill(red,rect = [apple_x, apple_y, playerSnake.blockSize, playerSnake.blockSize])
 
-        #keeps the snake from growing indefinitely
-        if len(playerSnake.snakeList) > playerSnake.snakeLength:
-            del playerSnake.snakeList[0]
-
-        #check to see if the snake head has ran into its body: thus causing a game over
-        for eachPart in playerSnake.snakeList[:-1]:
-            if eachPart == snakeHead:
-                gameOver = True
+        #update the movement of the snake for this frame
+        playerSnake.snakeMovement()
 
         #renders the snake's body on each frame
         for eachPart in playerSnake.snakeList:
             gameDisplay.fill(playerSnake.color, rect = [eachPart[0], eachPart[1], playerSnake.blockSize, playerSnake.blockSize])
 
-        #keeps the score
-        score(playerSnake.snakeLength-1)
+        ## GAME SPECIFIC RULES ##
+        ## design choice: did not want to include a function for this in the snake class ##
+        ## because the rules of the game may change for future game types I may implement ##
         
-        #DONT FORGET TO UPDATE DISPLAY
-        pygame.display.update()
+        #check to see if the snake head has ran into its body: thus causing a game over
+        for eachPart in playerSnake.snakeList[:-1]:
+            if eachPart == playerSnake.snakeHead:
+                gameOver = True
 
         #checks to see if the snake head has ran into the boundaries of the game board
         if playerSnake.xCoord < 0 or playerSnake.xCoord >= display_width - playerSnake.blockSize or playerSnake.yCoord < 0 or playerSnake.yCoord >= display_height - playerSnake.blockSize:
@@ -135,10 +122,21 @@ def singlePlayerClassicGame():
             apple_x, apple_y = apple_spawn(playerSnake.blockSize)
             playerSnake.snakeLength += 1
 
+        #keeps the score
+        score(playerSnake.snakeLength-1)
+        
+        #DONT FORGET TO UPDATE DISPLAY
+        pygame.display.update()
+
         #controls the frame rate of the game
         clock.tick(15)
                 
 
+##def twoPlayerGame():
+##    #game will be based on who kills who
+##    #an apple will spawn and each player has to eat the apple to grow
+##    playerOne = Snake([], 1, 
+    
 #define the start menue
 def start_menu():
     starting = True
@@ -180,7 +178,6 @@ def start_menu():
 
 ## FOR TESTING ONLY ##
 ##clearDB()
-
 
 #run start menue
 start_menu()
