@@ -10,43 +10,6 @@ from SnakeGameClasses import *
 pygame.init()
 
 pygame.display.set_caption('Cedric\'s Snake Game')
-
-#define the start menue
-def start_menu():
-    starting = True
-    while starting:
-        gameDisplay.fill(white)
-        message_to_user("Cedric's Snake Game",
-                            green,
-                            y_displace = -120,
-                            size = "large")
-        message_to_user("The objective of the game is to eat red apples",
-                            black,
-                            y_displace = -70)
-        message_to_user("The more apple you eat, the longer you become",
-                            black,
-                            y_displace = -40)
-        message_to_user("If you run into yourself, or the boundaries, you lose!",
-                            black,
-                            y_displace = -10)
-        message_to_user("Press ENTER to play or ESC to quit",
-                            black,
-                            y_displace = 50)
-        message_to_user("Controls: use the arrow keys to move and SPACE to pause the ",
-                            black,
-                            y_displace = 200)
-        pygame.display.update()
-        clock.tick(15)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    starting = False
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    quit()
                     
 def singlePlayerClassicGame():
 
@@ -100,9 +63,6 @@ def singlePlayerClassicGame():
                         #remember: we added code that forces a quit
                         #within the start menue when certain user events occur
                         start_menu()
-                        #NOTE: call the game again if the user quits
-                        #one game and wants to start a new one
-                        singlePlayerClassicGame()
                     if event.key == pygame.K_SPACE:
                         singlePlayerClassicGame()
                 
@@ -129,7 +89,6 @@ def singlePlayerClassicGame():
                     return_to_start = pause()
                     if return_to_start == True:
                         start_menu()
-                        singlePlayerClassicGame()
 
         ## UPDATING THE SNAKE ON EVERY FRAME ##
                         
@@ -180,7 +139,44 @@ def singlePlayerClassicGame():
         clock.tick(15)
                 
 
-    pygame.quit()
+#define the start menue
+def start_menu():
+    starting = True
+    while starting:
+        gameDisplay.fill(white)
+        message_to_user("Cedric's Snake Game",
+                            green,
+                            y_displace = -120,
+                            size = "large")
+        message_to_user("The objective of the game is to eat red apples",
+                            black,
+                            y_displace = -70)
+        message_to_user("The more apple you eat, the longer you become",
+                            black,
+                            y_displace = -40)
+        message_to_user("If you run into yourself, or the boundaries, you lose!",
+                            black,
+                            y_displace = -10)
+        message_to_user("Press ENTER to play or ESC to quit",
+                            black,
+                            y_displace = 50)
+        message_to_user("Controls: use the arrow keys to move and SPACE to pause the ",
+                            black,
+                            y_displace = 200)
+        pygame.display.update()
+        clock.tick(15)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    #runs the game
+                    starting = False
+                    singlePlayerClassicGame()
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    quit()
 
 ## FOR TESTING ONLY ##
 ##clearDB()
@@ -188,6 +184,5 @@ def singlePlayerClassicGame():
 
 #run start menue
 start_menu()
-#runs the game
-singlePlayerClassicGame()
+
 quit()
