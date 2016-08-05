@@ -45,43 +45,6 @@ def message_to_user(msg, color, x_displace = 0, y_displace = 0, size = "small", 
 def score(score):
     text = small_font.render("Score: " + str(score), True, black)
     gameDisplay.blit(text, [0,0])
-    
-#define the start menue
-def start_menu():
-    starting = True
-    while starting:
-        gameDisplay.fill(white)
-        message_to_user("Cedric's Snake Game",
-                            green,
-                            y_displace = -120,
-                            size = "large")
-        message_to_user("The objective of the game is to eat red apples",
-                            black,
-                            y_displace = -70)
-        message_to_user("The more apple you eat, the longer you become",
-                            black,
-                            y_displace = -40)
-        message_to_user("If you run into yourself, or the boundaries, you lose!",
-                            black,
-                            y_displace = -10)
-        message_to_user("Press ENTER to play or ESC to quit",
-                            black,
-                            y_displace = 50)
-        message_to_user("Controls: use the arrow keys to move and SPACE to pause the game",
-                            black,
-                            y_displace = 200)
-        pygame.display.update()
-        clock.tick(15)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    starting = False
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    quit()
 
 def pause():
     paused = True

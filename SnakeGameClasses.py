@@ -1,7 +1,7 @@
 #classes to describe sprites of game
 
 class Snake(object):
-    def __init__(snakeList, snakeLength, snakeBlockSize
+    def __init__(self, snakeList, snakeLength, blockSize,
                  xCoord, yCoord, xVel, yVel, color, img = None):
         #use this list to append blocks together that forms the snake
         self.snakeList = snakeList
@@ -10,7 +10,7 @@ class Snake(object):
         self.snakeLength = snakeLength
         
         #size of each block that makes the snake
-        self.snakeBlockSize = snakeBlockSize
+        self.blockSize = blockSize
         
         #horizonatal position of the snake
         self.xCoord = xCoord
