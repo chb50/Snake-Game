@@ -8,9 +8,11 @@ pygame.init()
 pygame.display.set_caption('Cedric\'s Snake Game')
 
 def game():
-    
+
+    #Flags
     gameActive = True
     gameOver = False
+    updatedHighScore = False
 
     #this list along with snakeLength controls the size of the snake
     snakeList = []
@@ -36,10 +38,18 @@ def game():
                             red,
                             y_displace = -100,
                             size = "large")
+            
+            if testHighScores(snakeLength - 1):
+                message_to_user("New Hi Score!",
+                                blue,
+                                size = "medium")
+                userTextInput(15, "small", white, y_displace = 50)
+                
             message_to_user("press SPACE to play again or ESC to exit",
                             black,
-                            y_displace = 50)
+                            y_displace = 100)
             pygame.display.update()
+                
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     gameActive = False
@@ -130,7 +140,7 @@ def game():
 
     pygame.quit()
 
-print(testHighScores(75))
+clearDB()
 #run start menue
 start_menu()
 #runs the game

@@ -4,6 +4,7 @@ import sqlite3
 import datetime
 import time
 from SnakeGameProperties import *
+from userKeystrokeFunc import userKeystroke
 
 def apple_spawn(apple_size): #inserting "block_size" as arguement currently
     #NOTE: the game only retains its grid-like structure if "display_width"
@@ -13,18 +14,27 @@ def apple_spawn(apple_size): #inserting "block_size" as arguement currently
     return apple_x, apple_y
 
 #used to render the text ant the requested size of the text
-def text_objects(text,color,size):
-    if size == "small":
-        textSurface = small_font.render(text,True,color)
-    elif size == "medium":
-        textSurface = med_font.render(text,True,color)
-    elif size == "large":
-        textSurface = large_font.render(text,True,color)
-    return textSurface, textSurface.get_rect()
+def text_objects(text,color,size,background = None):
+    if background != None:
+        if size == "small":
+            textSurface = small_font.render(text,True,color,background)
+        elif size == "medium":
+            textSurface = med_font.render(text,True,color,background)
+        elif size == "large":
+            textSurface = large_font.render(text,True,color,background)
+        return textSurface, textSurface.get_rect()
+    else:
+        if size == "small":
+            textSurface = small_font.render(text,True,color)
+        elif size == "medium":
+            textSurface = med_font.render(text,True,color)
+        elif size == "large":
+            textSurface = large_font.render(text,True,color)
+        return textSurface, textSurface.get_rect()
 
 #used to display various messages to the user        
-def message_to_user(msg, color, x_displace = 0, y_displace = 0, size = "small"):
-    textSurface, textRect = text_objects(msg,color,size)
+def message_to_user(msg, color, x_displace = 0, y_displace = 0, size = "small", background = None):
+    textSurface, textRect = text_objects(msg,color,size,background)
     #textRect is a list of 2 elements, the x coordinate and the y coordinate
     #of the message to render
     textRect.center = (display_width/2) + x_displace, (display_height/2) + y_displace
@@ -105,8 +115,16 @@ def testHighScores(score):
     connect = sqlite3.connect("SnakeGameDatabase.db")
     c = connect.cursor()
 
-    c.execute('SELECT * FROM highScores')
+    c.execute('SELECT COUNT(*) FROM highScores')
+    currentSize = c.fetchone()[0]
 
+    if currentSize == 0:
+        c.close()
+        connect.close()
+        return True
+
+    c.execute('SELECT * FROM highScores')
+    
     for row in c.fetchall():
         if score > row[3]:
             c.close()
@@ -200,6 +218,60 @@ def clearDB():
     c.close()
     connect.close()
 
+def userTextInput(charSize, size, backgroundColor, x_displace = 0, y_displace = 0):
+    ##charSize is the number of characters we will allow the user to input
+    ##x_displace is horizontal displacement of input field
+    ##y_displace is verticle displacement of input field
+    ##size is the size of each character in the field, passed to the message_to_user function
+    ##backgroundColor is used to clear the userInput on each frame so overlapping doesnt occur
+    #   backgroundColor needs to be the same color as the surface that the userInput is residing on
+    userInput = ""
+    message_to_user(userInput + "|",
+                    black,
+                    x_displace,
+                    y_displace,
+                    size)
+    pygame.display.update()
+    
+    #TODO: add blinking effect for cursor
+    while True:
+        #used to clear the text field on each frame so that the uses input does not overlap
+        #+1 used for cursor
+        #used "W" because " " is not wide enough
+        whiteSpace = (charSize + len(userInput) + 1) * "W"
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    #finalize user name input
+                    return userInput
+                if event.key == pygame.K_BACKSPACE:
+                    userInput = userInput[:-1]
+                if len(userInput) < charSize:
+                    #if len is equal to charSize, then do not allow the user to input any more characters
+                    userInput = userKeystroke(event, userInput)
 
+        #clear used space first
+        message_to_user(whiteSpace,
+                        white,
+                        x_displace,
+                        y_displace,
+                        size,
+                        backgroundColor)
+                         
+        #update the displayed input field on the games interface
+        message_to_user(userInput + "|",
+                        black,
+                        x_displace,
+                        y_displace,
+                        size)
+        
+        pygame.display.update()
+
+    ##indicates and error has occured
+    return None
     
     
