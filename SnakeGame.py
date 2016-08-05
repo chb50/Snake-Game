@@ -132,10 +132,144 @@ def singlePlayerClassicGame():
         clock.tick(15)
                 
 
-##def twoPlayerGame():
-##    #game will be based on who kills who
-##    #an apple will spawn and each player has to eat the apple to grow
-##    playerOne = Snake([], 1, 
+def twoPlayerGame():
+
+    #TODO: figure out what to do when the snakes colide head on with each other
+
+    #Flags
+    gameActive = True
+    gameOver = False
+    playerWon = 0
+
+    blockSize = 20
+    #game will be based on who kills who
+    #an apple will spawn and each player has to eat the apple to grow
+    playerOne = Snake([], 1, blockSize, 100, 340, 0, -blockSize, blue)
+    playerTwo = Snake([], 1, blockSize, 700, 60, 0, blockSize, green)
+
+    #initial apple placement will be in center
+    appleX = display_width/2
+    appleY = display_height/2
+
+    while gameActive:
+
+        while gameOver:
+            
+            gameDisplay.fill(white)
+            message_to_user("Game Over",
+                            red,
+                            y_displace = -100,
+                            size = "large")
+            message_to_user("Player " + str(playerWon) + " won!",
+                            blue,
+                            size = "medium")
+            message_to_user("press SPACE to play again or ESC to exit",
+                            black,
+                            y_displace = 100)
+            pygame.display.update()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    gameActive = False
+                    gameOver = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        #remember: we added code that forces a quit
+                        #within the start menue when certain user events occur
+                        start_menu()
+                    if event.key == pygame.K_SPACE:
+                        twoPlayerGame()
+            
+
+        #playerMovement
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                gameActive = False
+            if event.type == pygame.KEYDOWN:
+                #the extra "and" statement keeps the player from
+                #backing the snake up into itself
+                #player one
+                if event.key == pygame.K_a and playerOne.xVel != blockSize:
+                    playerOne.xVel = -blockSize
+                    playerOne.yVel = 0
+                if event.key == pygame.K_d and playerOne.xVel != -blockSize:
+                    playerOne.xVel = blockSize
+                    playerOne.yVel = 0
+                if event.key == pygame.K_w and playerOne.yVel != blockSize:
+                    playerOne.yVel = -blockSize
+                    playerOne.xVel = 0
+                if event.key == pygame.K_s and playerOne.yVel != -blockSize:
+                    playerOne.yVel = blockSize
+                    playerOne.xVel = 0
+                #player two
+                if event.key == pygame.K_j and playerTwo.xVel != blockSize:
+                    playerTwo.xVel = -blockSize
+                    playerTwo.yVel = 0
+                if event.key == pygame.K_l and playerTwo.xVel != -blockSize:
+                    playerTwo.xVel = blockSize
+                    playerTwo.yVel = 0
+                if event.key == pygame.K_i and playerTwo.yVel != blockSize:
+                    playerTwo.yVel = -blockSize
+                    playerTwo.xVel = 0
+                if event.key == pygame.K_k and playerTwo.yVel != -blockSize:
+                    playerTwo.yVel = blockSize
+                    playerTwo.xVel = 0
+                #pause
+                if event.key == pygame.K_SPACE:
+                    return_to_start = pause()
+                    if return_to_start == True:
+                        start_menu()
+                        
+        #renders the game board and the apple
+        gameDisplay.fill(white)
+        gameDisplay.fill(red,rect = [appleX, appleY, blockSize, blockSize])
+
+        #update player movement
+        playerOne.snakeMovement()
+        playerTwo.snakeMovement()
+
+        #render snakes
+        for eachPart in playerOne.snakeList:
+            gameDisplay.fill(playerOne.color, rect = [eachPart[0], eachPart[1], playerOne.blockSize, playerOne.blockSize])
+
+        for eachPart in playerTwo.snakeList:
+            gameDisplay.fill(playerTwo.color, rect = [eachPart[0], eachPart[1], playerTwo.blockSize, playerTwo.blockSize])
+
+        #check to see if the snake head has ran into its body: thus causing a game over
+        for eachPart in playerOne.snakeList[:-1]:
+            if eachPart == playerOne.snakeHead:
+                playerWon = 2
+                gameOver = True
+
+        for eachPart in playerTwo.snakeList[:-1]:
+            if eachPart == playerTwo.snakeHead:
+                playerWon = 1
+                gameOver = True
+
+        #checks to see if the snake head has ran into the boundaries of the game board
+        if playerOne.xCoord < 0 or playerOne.xCoord >= display_width - playerOne.blockSize or playerOne.yCoord < 0 or playerOne.yCoord >= display_height - playerOne.blockSize:
+            playerWon = 2
+            gameOver = True
+
+        if playerTwo.xCoord < 0 or playerTwo.xCoord >= display_width - playerTwo.blockSize or playerTwo.yCoord < 0 or playerTwo.yCoord >= display_height - playerTwo.blockSize:
+            playerWon = 1
+            gameOver = True
+
+        #updates the placement of the apple and the size of the snake body for
+        #each apple eaten
+        if appleX == playerOne.xCoord and appleY == playerOne.yCoord:
+            appleX, appleY = apple_spawn(playerOne.blockSize)
+            playerOne.snakeLength += 1
+
+        if appleX == playerTwo.xCoord and appleY == playerTwo.yCoord:
+            appleX, appleY = apple_spawn(playerTwo.blockSize)
+            playerTwo.snakeLength += 1
+
+        #DONT FORGET TO UPDATE DISPLAY
+        pygame.display.update()
+
+        #controls the frame rate of the game
+        clock.tick(15)
     
 #define the start menue
 def start_menu():
@@ -171,7 +305,8 @@ def start_menu():
                 if event.key == pygame.K_RETURN:
                     #runs the game
                     starting = False
-                    singlePlayerClassicGame()
+                    #singlePlayerClassicGame()
+                    twoPlayerGame()
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     quit()
