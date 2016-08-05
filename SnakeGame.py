@@ -58,6 +58,8 @@ def singlePlayerClassicGame():
                 if event.type == pygame.QUIT:
                     gameActive = False
                     gameOver = False
+                    pygame.quit()
+                    quit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         #remember: we added code that forces a quit
@@ -172,6 +174,8 @@ def twoPlayerGame():
                 if event.type == pygame.QUIT:
                     gameActive = False
                     gameOver = False
+                    pygame.quit()
+                    quit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         #remember: we added code that forces a quit
@@ -237,13 +241,21 @@ def twoPlayerGame():
 
         #check to see if the snake head has ran into its body: thus causing a game over
         for eachPart in playerOne.snakeList[:-1]:
+            #tests if snake runs into itself
             if eachPart == playerOne.snakeHead:
                 playerWon = 2
+                gameOver = True
+            #tests if player 2's snake runs into player 1's snake
+            if eachPart == playerTwo.snakeHead:
+                playerWon = 1
                 gameOver = True
 
         for eachPart in playerTwo.snakeList[:-1]:
             if eachPart == playerTwo.snakeHead:
                 playerWon = 1
+                gameOver = True
+            if eachPart == playerOne.snakeHead:
+                playerWon = 2
                 gameOver = True
 
         #checks to see if the snake head has ran into the boundaries of the game board
