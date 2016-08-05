@@ -38,12 +38,18 @@ def game():
                             red,
                             y_displace = -100,
                             size = "large")
-            
-            if testHighScores(snakeLength - 1):
+            #test and set high scores
+            if testHighScores(snakeLength - 1) and updatedHighScore == False:
+                hiScore = snakeLength - 1
+                    
                 message_to_user("New Hi Score!",
                                 blue,
                                 size = "medium")
-                userTextInput(15, "small", white, y_displace = 50)
+                #get name from user
+                username = userTextInput(15, "small", white, y_displace = 50)
+                #place info into database
+                setHighScores(username, hiScore)
+                updatedHighScore = True
                 
             message_to_user("press SPACE to play again or ESC to exit",
                             black,
@@ -140,7 +146,10 @@ def game():
 
     pygame.quit()
 
-clearDB()
+## FOR TESTING ONLY ##
+##clearDB()
+
+
 #run start menue
 start_menu()
 #runs the game
