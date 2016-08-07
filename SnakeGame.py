@@ -506,4 +506,10 @@ quit()
 #multiplayer has not been extensively tested yet, gotta do that and figure out its behaviors
 #   the bug that exists above for single player also exists for multiplayer
 
+#3)
+#Have a high score selection so that the user can see their high scores
+
+#4)
+#should make sure that the apple cannot spawn under the snake
+
 #once the above things are done, its time to make it into an executable

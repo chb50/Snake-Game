@@ -99,7 +99,6 @@ def testHighScores(score):
     return False
 
 #returns true if high score is achieved, false otherwise
-#TODO: this code will have to change such that the user will input a name only when their score is confirmed to be a high score (from the function above)
 def setHighScores(name, score):
     connect = sqlite3.connect("SnakeGameDatabase.db")
     c = connect.cursor()
