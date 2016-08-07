@@ -1,5 +1,7 @@
 ### THIS IS THE MAIN FILE, THE GAME SHOULD BE RAN FROM HERE ###
 
+### VERSION 1.0 --- WRITTEN BY CEDRIC BLAKE ###
+
 import sqlite3
 import pygame
 import random
@@ -72,21 +74,27 @@ def singlePlayerClassicGame():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 gameActive = False
+                pygame.quit()
+                quit()
             if event.type == pygame.KEYDOWN:
                 #the extra "and" statement keeps the player from
                 #backing the snake up into itself
                 if event.key == pygame.K_a and playerSnake.xVel != playerSnake.blockSize:
                     playerSnake.xVel = -block_size
                     playerSnake.yVel = 0
+                    break
                 if event.key == pygame.K_d and playerSnake.xVel != -playerSnake.blockSize:
                     playerSnake.xVel = block_size
                     playerSnake.yVel = 0
+                    break
                 if event.key == pygame.K_w and playerSnake.yVel != playerSnake.blockSize:
                     playerSnake.yVel = -block_size
                     playerSnake.xVel = 0
+                    break
                 if event.key == pygame.K_s and playerSnake.yVel != -playerSnake.blockSize:
                     playerSnake.yVel = block_size
                     playerSnake.xVel = 0
+                    break
                 if event.key == pygame.K_SPACE:
                     return_to_start = pause()
                     if return_to_start == True:
@@ -142,6 +150,9 @@ def twoPlayerGame():
     gameActive = True
     gameOver = False
     playerWon = 0
+    #used so that each player cannot queue more than one input per frame
+    playerOneInput = False
+    playerTwoInput = False
 
     blockSize = 20
     #game will be based on who kills who
@@ -155,6 +166,11 @@ def twoPlayerGame():
 
     while gameActive:
 
+        #Flags, these flags need to reset on every frame
+        #used so that each player cannot queue more than one input per frame
+        playerOneInput = False
+        playerTwoInput = False
+        
         while gameOver:
             
             gameDisplay.fill(white)
@@ -189,35 +205,45 @@ def twoPlayerGame():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 gameActive = False
+                pygame.quit()
+                quit()
             if event.type == pygame.KEYDOWN:
                 #the extra "and" statement keeps the player from
                 #backing the snake up into itself
                 #player one
-                if event.key == pygame.K_a and playerOne.xVel != blockSize:
+                if event.key == pygame.K_a and playerOne.xVel != blockSize and playerOneInput == False:
                     playerOne.xVel = -blockSize
                     playerOne.yVel = 0
-                if event.key == pygame.K_d and playerOne.xVel != -blockSize:
+                    playerOneInput = True
+                if event.key == pygame.K_d and playerOne.xVel != -blockSize and playerOneInput == False:
                     playerOne.xVel = blockSize
                     playerOne.yVel = 0
-                if event.key == pygame.K_w and playerOne.yVel != blockSize:
+                    playerOneInput = True
+                if event.key == pygame.K_w and playerOne.yVel != blockSize and playerOneInput == False:
                     playerOne.yVel = -blockSize
                     playerOne.xVel = 0
-                if event.key == pygame.K_s and playerOne.yVel != -blockSize:
+                    playerOneInput = True
+                if event.key == pygame.K_s and playerOne.yVel != -blockSize and playerOneInput == False:
                     playerOne.yVel = blockSize
                     playerOne.xVel = 0
+                    playerOneInput = True
                 #player two
-                if event.key == pygame.K_j and playerTwo.xVel != blockSize:
+                if event.key == pygame.K_j and playerTwo.xVel != blockSize and playerTwoInput == False:
                     playerTwo.xVel = -blockSize
                     playerTwo.yVel = 0
-                if event.key == pygame.K_l and playerTwo.xVel != -blockSize:
+                    playerTwoInput = True
+                if event.key == pygame.K_l and playerTwo.xVel != -blockSize and playerTwoInput == False:
                     playerTwo.xVel = blockSize
                     playerTwo.yVel = 0
-                if event.key == pygame.K_i and playerTwo.yVel != blockSize:
+                    playerTwoInput = True
+                if event.key == pygame.K_i and playerTwo.yVel != blockSize and playerTwoInput == False:
                     playerTwo.yVel = -blockSize
                     playerTwo.xVel = 0
-                if event.key == pygame.K_k and playerTwo.yVel != -blockSize:
+                    playerTwoInput = True
+                if event.key == pygame.K_k and playerTwo.yVel != -blockSize and playerTwoInput == False:
                     playerTwo.yVel = blockSize
                     playerTwo.xVel = 0
+                    playerTwoInput = True
                 #pause
                 if event.key == pygame.K_SPACE:
                     return_to_start = pause()
@@ -372,7 +398,7 @@ def start_menu():
 
     #initialize the display
     gameDisplay.fill(white)
-    message_to_user("Cedric's Snake Game",
+    message_to_user("Snake Mania!",
                         green,
                         y_displace = -120,
                         size = "large")
@@ -470,7 +496,8 @@ start_menu()
 quit()
 
 #TODO: gotta fix some bugs:
-#1)
+
+#1) ### I THINK I FIXED IT BUT THIS WILL BE MONITORED ###
 #there is a bug that causes the snake to turn in on itself if 2 inputs are made at the same time that are not in opposite directions
 #and one of the 2 inputs are the opposite direction of the current direction of motion of the snake (i.e. right + up while the sanke is moving down)
 #   this is possibly due to the game accepting multiple inputs on each frame
