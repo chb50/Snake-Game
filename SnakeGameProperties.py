@@ -8,6 +8,7 @@ black = (0,0,0)
 red = (255,0,0)
 green = (0,255,0)
 blue = (0,0,255)
+gray = (145, 145, 145)
 
 #Fonts
 small_font = pygame.font.SysFont("comicsansms", 25)

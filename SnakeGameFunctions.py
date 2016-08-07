@@ -236,5 +236,39 @@ def userTextInput(charSize, size, backgroundColor, x_displace = 0, y_displace = 
 
     ##indicates and error has occured
     return None
-    
-    
+
+#used to display keys in "How to play" screen, amongst other things
+#NOTE: xCoord and yCoord is the coordinate of the middle key
+#for instance, if we are reffering to the wasd keys, then xCoord,yCoord
+#refers to key "s"
+#these coordinates are in reference to the center of the display
+def wasdDisplay(xCoord, yCoord, w, a, s, d):
+    #w
+    pygame.draw.rect(gameDisplay, gray, (display_width/2 + xCoord, display_height/2 + yCoord - 60, 50,50))
+    message_to_user(w,
+                    white,
+                    x_displace = xCoord + 17,
+                    y_displace = yCoord - 40,
+                    size = "small")
+    #a
+    pygame.draw.rect(gameDisplay, gray, (display_width/2 + xCoord - 60, display_height/2 + yCoord, 50,50))
+    message_to_user(a,
+                    white,
+                    x_displace = xCoord - 43,
+                    y_displace = yCoord + 20,
+                    size = "small")
+    #s
+    pygame.draw.rect(gameDisplay, gray, (display_width/2 + xCoord, display_height/2 + yCoord, 50,50))
+    message_to_user(s,
+                    white,
+                    x_displace = xCoord + 17,
+                    y_displace = yCoord + 20,
+                    size = "small")
+    #d
+    pygame.draw.rect(gameDisplay, gray, (display_width/2 + xCoord + 60, display_height/2 + yCoord, 50,50))
+    message_to_user(d,
+                    white,
+                    x_displace = xCoord + 77,
+                    y_displace = yCoord + 20,
+                    size = "small")
+    return

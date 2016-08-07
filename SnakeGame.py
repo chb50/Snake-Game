@@ -75,16 +75,16 @@ def singlePlayerClassicGame():
             if event.type == pygame.KEYDOWN:
                 #the extra "and" statement keeps the player from
                 #backing the snake up into itself
-                if event.key == pygame.K_LEFT and playerSnake.xVel != playerSnake.blockSize:
+                if event.key == pygame.K_a and playerSnake.xVel != playerSnake.blockSize:
                     playerSnake.xVel = -block_size
                     playerSnake.yVel = 0
-                if event.key == pygame.K_RIGHT and playerSnake.xVel != -playerSnake.blockSize:
+                if event.key == pygame.K_d and playerSnake.xVel != -playerSnake.blockSize:
                     playerSnake.xVel = block_size
                     playerSnake.yVel = 0
-                if event.key == pygame.K_UP and playerSnake.yVel != playerSnake.blockSize:
+                if event.key == pygame.K_w and playerSnake.yVel != playerSnake.blockSize:
                     playerSnake.yVel = -block_size
                     playerSnake.xVel = 0
-                if event.key == pygame.K_DOWN and playerSnake.yVel != -playerSnake.blockSize:
+                if event.key == pygame.K_s and playerSnake.yVel != -playerSnake.blockSize:
                     playerSnake.yVel = block_size
                     playerSnake.xVel = 0
                 if event.key == pygame.K_SPACE:
@@ -282,46 +282,184 @@ def twoPlayerGame():
 
         #controls the frame rate of the game
         clock.tick(15)
-    
-#define the start menue
-def start_menu():
+
+def howToPlay():
     starting = True
+    gameDisplay.fill(white)
+    message_to_user("How To Play",
+                        green,
+                        y_displace = -200,
+                        size = "large")
+    message_to_user("Player 1",
+                    black,
+                    x_displace = -170,
+                    y_displace = -120,
+                    size = "medium")
+    message_to_user("Player 2",
+                    black,
+                    x_displace = 170,
+                    y_displace = -120,
+                    size = "medium")
+    
+    wasdDisplay(-200, 30, "W", "A", "S", "D")
+    wasdDisplay(150, 30, "I", "J", "K", "L")
+
+    #Player 1
+    message_to_user("turn up",
+                    black,
+                    x_displace = -175,
+                    y_displace = -60)
+    message_to_user("turn left",
+                    black,
+                    x_displace = -270,
+                    y_displace = 0)
+    message_to_user("turn down",
+                    black,
+                    x_displace = -175,
+                    y_displace = 100)
+    message_to_user("turn right",
+                    black,
+                    x_displace = -80,
+                    y_displace = 0)
+    message_to_user("Press ESC to return to main menu",
+                        black,
+                        x_displace = -200,
+                        y_displace = 270)
+
+    #Player 2
+    message_to_user("turn up",
+                    black,
+                    x_displace = 175,
+                    y_displace = -60)
+    message_to_user("turn left",
+                    black,
+                    x_displace = 80,
+                    y_displace = 0)
+    message_to_user("turn down",
+                    black,
+                    x_displace = 175,
+                    y_displace = 100)
+    message_to_user("turn right",
+                    black,
+                    x_displace = 270,
+                    y_displace = 0)
+    message_to_user("Press ESC to return to main menu",
+                        black,
+                        x_displace = -200,
+                        y_displace = 270)
+    
+    pygame.display.update()
+
     while starting:
-        gameDisplay.fill(white)
-        message_to_user("Cedric's Snake Game",
-                            green,
-                            y_displace = -120,
-                            size = "large")
-        message_to_user("The objective of the game is to eat red apples",
-                            black,
-                            y_displace = -70)
-        message_to_user("The more apple you eat, the longer you become",
-                            black,
-                            y_displace = -40)
-        message_to_user("If you run into yourself, or the boundaries, you lose!",
-                            black,
-                            y_displace = -10)
-        message_to_user("Press ENTER to play or ESC to quit",
-                            black,
-                            y_displace = 50)
-        message_to_user("Controls: use the arrow keys to move and SPACE to pause the ",
-                            black,
-                            y_displace = 200)
-        pygame.display.update()
-        clock.tick(15)
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    #runs the game
-                    starting = False
-                    #singlePlayerClassicGame()
-                    twoPlayerGame()
                 if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    quit()
+                    starting = False
+                    start_menu()
+                
+
+#define the start menue
+def start_menu():
+    starting = True
+    #the number of options the user can select from
+    numItems = 4
+    #the option that the user is currently hovering over
+    itemSelect = 1
+
+    #initialize the display
+    gameDisplay.fill(white)
+    message_to_user("Cedric's Snake Game",
+                        green,
+                        y_displace = -120,
+                        size = "large")
+    message_to_user("Single Player Game",
+                    black)
+    message_to_user("Multiplayer Game",
+                    black,
+                    y_displace = 40)
+    message_to_user("How To Play",
+                    black,
+                    y_displace = 80)
+    message_to_user("Exit Game",
+                    black,
+                    y_displace = 120)
+
+    #start selection indicator at first item in list
+    pygame.draw.circle(gameDisplay, blue, (display_width/2 - 120, display_height/2), 10)
+    pygame.display.update()
+        
+    while starting:
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    if itemSelect == 1:
+                        itemSelect = numItems
+                        #delete circle from previous selection
+                        pygame.draw.circle(gameDisplay, white, (display_width/2 - 120, display_height/2), 10)
+                        pygame.draw.circle(gameDisplay, blue, (display_width/2 - 70, display_height/2 + 120), 10)
+                        pygame.display.update()
+                    elif itemSelect == 2:
+                        itemSelect -= 1
+                        pygame.draw.circle(gameDisplay, white, (display_width/2 - 115, display_height/2 + 40), 10)
+                        pygame.draw.circle(gameDisplay, blue, (display_width/2 - 120, display_height/2), 10)
+                        pygame.display.update()
+                    elif itemSelect == 3:
+                        itemSelect -= 1
+                        pygame.draw.circle(gameDisplay, white, (display_width/2 - 80, display_height/2 + 80), 10)
+                        pygame.draw.circle(gameDisplay, blue, (display_width/2 - 115, display_height/2 + 40), 10)
+                        pygame.display.update()
+                    elif itemSelect == numItems:
+                        itemSelect -= 1
+                        pygame.draw.circle(gameDisplay, white, (display_width/2 - 70, display_height/2 + 120), 10)
+                        pygame.draw.circle(gameDisplay, blue, (display_width/2 - 80, display_height/2 + 80), 10)
+                        pygame.display.update()
+                if event.key == pygame.K_DOWN:
+                    if itemSelect == 1:
+                        itemSelect += 1
+                        pygame.draw.circle(gameDisplay, white, (display_width/2 - 120, display_height/2), 10)
+                        pygame.draw.circle(gameDisplay, blue, (display_width/2 - 115, display_height/2 + 40), 10)
+                        pygame.display.update()
+                    elif itemSelect == 2:
+                        itemSelect += 1
+                        pygame.draw.circle(gameDisplay, white, (display_width/2 - 115, display_height/2 + 40), 10)
+                        pygame.draw.circle(gameDisplay, blue, (display_width/2 - 80, display_height/2 + 80), 10)
+                        pygame.display.update()
+                    elif itemSelect == 3:
+                        itemSelect = 4
+                        pygame.draw.circle(gameDisplay, white, (display_width/2 - 80, display_height/2 + 80), 10)
+                        pygame.draw.circle(gameDisplay, blue, (display_width/2 - 70, display_height/2 + 120), 10)
+                        pygame.display.update()
+                    elif itemSelect == numItems:
+                        itemSelect = 1
+                        pygame.draw.circle(gameDisplay, white, (display_width/2 - 70, display_height/2 + 120), 10)
+                        pygame.draw.circle(gameDisplay, blue, (display_width/2 - 120, display_height/2), 10)
+                        pygame.display.update()
+                if event.key == pygame.K_RETURN:
+                    starting = False
+                    #single player
+                    if itemSelect == 1:
+                        singlePlayerClassicGame()
+                    #multiplayer
+                    elif itemSelect == 2:
+                        twoPlayerGame()
+                    #how to play
+                    elif itemSelect == 3:
+                        howToPlay()
+                    #exit game
+                    elif itemSelect == 4:
+                        pygame.quit()
+                        quit()
+                    #exit game
+
+        clock.tick(15)
 
 ## FOR TESTING ONLY ##
 ##clearDB()
@@ -330,3 +468,15 @@ def start_menu():
 start_menu()
 
 quit()
+
+#TODO: gotta fix some bugs:
+#1)
+#there is a bug that causes the snake to turn in on itself if 2 inputs are made at the same time that are not in opposite directions
+#and one of the 2 inputs are the opposite direction of the current direction of motion of the snake (i.e. right + up while the sanke is moving down)
+#   this is possibly due to the game accepting multiple inputs on each frame
+
+#2)
+#multiplayer has not been extensively tested yet, gotta do that and figure out its behaviors
+#   the bug that exists above for single player also exists for multiplayer
+
+#once the above things are done, its time to make it into an executable
