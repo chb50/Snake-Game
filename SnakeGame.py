@@ -157,7 +157,7 @@ def twoPlayerGame():
     blockSize = 20
     #game will be based on who kills who
     #an apple will spawn and each player has to eat the apple to grow
-    playerOne = Snake([], 1, blockSize, 100, 340, 0, -blockSize, blue)
+    playerOne = Snake([], 1, blockSize, 100, 540, 0, -blockSize, blue)
     playerTwo = Snake([], 1, blockSize, 700, 60, 0, blockSize, green)
 
     #initial apple placement will be in center
