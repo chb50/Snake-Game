@@ -33,12 +33,91 @@ def text_objects(text,color,size,background = None):
         return textSurface, textSurface.get_rect()
 
 #used to display various messages to the user        
-def message_to_user(msg, color, x_displace = 0, y_displace = 0, size = "small", background = None):
+def message_to_user(msg, color, x_displace = 0, y_displace = 0, size = "small", background = None, textCenter = True):
     textSurface, textRect = text_objects(msg,color,size,background)
     #textRect is a list of 2 elements, the x coordinate and the y coordinate
     #of the message to render
-    textRect.center = (display_width/2) + x_displace, (display_height/2) + y_displace
+    if textCenter == True:
+        #centers text on gameDisplay based on the texts center
+        textRect.center = (display_width/2) + x_displace, (display_height/2) + y_displace
+    else:
+        #centers text on gameDisplay based on northwest point of textSurface (used for text lists with cursor)
+        textRect[0] += (display_width/2) + x_displace
+        textRect[1] += (display_height/2) + y_displace
     gameDisplay.blit(textSurface, textRect)
+
+#function for displaying a list of items for the user to select from
+def textList(xDisplace, yDisplace, *strings):
+    xDisp = xDisplace
+    yDisp = yDisplace
+    #itemsListLocal holds the y-location of each item in the list
+    itemsListLocal = []
+    for s in strings:
+        message_to_user(s,
+                        black,
+                        x_displace = xDisp,
+                        y_displace = yDisp,
+                        textCenter = False)
+        itemsListLocal.append(yDisp)
+        yDisp += 40
+
+    selecting = True
+
+    #the -20, +20 comes from the fact that we are referencing from the northwest corner of the text surface
+    #a crude way of acoounting for this, but it work visually so whatevs
+    #the first two items are the location of the dot, the third item is the radius of the dot
+    #and the final item is which item the dot is currently hovering on
+    cursorDot = [display_width/2 + xDisp - 20, display_height/2 + itemsListLocal[0] + 20, 10, 1]
+
+    #start selection indicator at first item in list
+    pygame.draw.circle(gameDisplay, blue, (cursorDot[0], cursorDot[1]), cursorDot[2])
+    pygame.display.update()
+
+    numOfItems = len(strings)
+
+    while selecting:
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    if cursorDot[3] == 1:
+                        cursorDot[3] = numOfItems
+                        #erase the current blue dot
+                        pygame.draw.circle(gameDisplay, white, (cursorDot[0], cursorDot[1]), cursorDot[2])
+                        #add a dot to the last item in list
+                        cursorDot[1] = display_height/2 + itemsListLocal[numOfItems - 1] + 20
+                        pygame.draw.circle(gameDisplay, blue, (cursorDot[0], cursorDot[1]), cursorDot[2])
+                        pygame.display.update()
+                    else:
+                        cursorDot[3] += -1
+                        pygame.draw.circle(gameDisplay, white, (cursorDot[0], cursorDot[1]), cursorDot[2])
+                        cursorDot[1] = display_height/2 + itemsListLocal[cursorDot[3] - 1] + 20
+                        pygame.draw.circle(gameDisplay, blue, (cursorDot[0], cursorDot[1]), cursorDot[2])
+                        pygame.display.update()
+                if event.key == pygame.K_DOWN:
+                    if cursorDot[3] == numOfItems:
+                        cursorDot[3] = 1
+                        pygame.draw.circle(gameDisplay, white, (cursorDot[0], cursorDot[1]), cursorDot[2])
+                        cursorDot[1] = display_height/2 + itemsListLocal[0] + 20
+                        pygame.draw.circle(gameDisplay, blue, (cursorDot[0], cursorDot[1]), cursorDot[2])
+                        pygame.display.update()
+                    else:
+                        cursorDot[3] += 1
+                        pygame.draw.circle(gameDisplay, white, (cursorDot[0], cursorDot[1]), cursorDot[2])
+                        cursorDot[1] = display_height/2 + itemsListLocal[cursorDot[3] - 1] + 20
+                        pygame.draw.circle(gameDisplay, blue, (cursorDot[0], cursorDot[1]), cursorDot[2])
+                        pygame.display.update()
+                if event.key == pygame.K_RETURN:
+                    selecting = False
+                    #return the item index that was selected, what to do with this info will be defind outside the function
+                    return cursorDot[3]
+
+        clock.tick(15)
+                        
+                        
 
 #function used to keep score (we position score by topleft corner of
 #text box instead of the center of the text box
@@ -97,6 +176,55 @@ def testHighScores(score):
     c.close()
     connect.close()
     return False
+
+def readHighScores(yDisplace):
+    connect = sqlite3.connect("SnakeGameDatabase.db")
+    c = connect.cursor()
+
+    yDisp = yDisplace
+    message_to_user("Rank",
+                    black,
+                    x_displace = -350,
+                    y_displace = yDisp)
+    message_to_user("Name",
+                    black,
+                    x_displace = -170,
+                    y_displace = yDisp)
+    message_to_user("Date",
+                    black,
+                    x_displace = 100,
+                    y_displace = yDisp)
+    message_to_user("Score",
+                    black,
+                    x_displace = 300,
+                    y_displace = yDisp)
+
+    c.execute('SELECT * FROM highScores')
+    for row in c.fetchall():
+        yDisp += 40
+        message_to_user(str(row[0]),
+                        black,
+                        x_displace = -350,
+                        y_displace = yDisp)
+        message_to_user(str(row[1]),
+                            black,
+                            x_displace = -170,
+                            y_displace = yDisp)
+        message_to_user(str(row[2]),
+                            black,
+                            x_displace = 100,
+                            y_displace = yDisp)
+        message_to_user(str(row[3]),
+                            black,
+                            x_displace = 300,
+                            y_displace = yDisp)
+
+    pygame.display.update()
+    c.close()
+    connect.close()
+    
+    
+    
 
 #returns true if high score is achieved, false otherwise
 def setHighScores(name, score):

@@ -309,6 +309,38 @@ def twoPlayerGame():
         #controls the frame rate of the game
         clock.tick(15)
 
+def highScoresMenu():
+
+    gameDisplay.fill(white)
+
+    message_to_user("Hi Scores",
+                    green,
+                    y_displace = -250,
+                    size = "large")
+    message_to_user("Single Player Game",
+                    blue,
+                    y_displace = -160,
+                    size = "medium")
+    message_to_user("Press ESC to return to main menu",
+                        black,
+                        x_displace = -200,
+                        y_displace = 270)
+    
+    readHighScores(-60)
+    viewing = True
+    while viewing:
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    viewing = False
+
+    start_menu()
+                
+
 def howToPlay():
     starting = True
     gameDisplay.fill(white)
@@ -392,9 +424,7 @@ def howToPlay():
 def start_menu():
     starting = True
     #the number of options the user can select from
-    numItems = 4
     #the option that the user is currently hovering over
-    itemSelect = 1
 
     #initialize the display
     gameDisplay.fill(white)
@@ -402,90 +432,30 @@ def start_menu():
                         green,
                         y_displace = -120,
                         size = "large")
-    message_to_user("Single Player Game",
-                    black)
-    message_to_user("Multiplayer Game",
-                    black,
-                    y_displace = 40)
-    message_to_user("How To Play",
-                    black,
-                    y_displace = 80)
-    message_to_user("Exit Game",
-                    black,
-                    y_displace = 120)
 
-    #start selection indicator at first item in list
-    pygame.draw.circle(gameDisplay, blue, (display_width/2 - 120, display_height/2), 10)
-    pygame.display.update()
-        
-    while starting:
-        
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    if itemSelect == 1:
-                        itemSelect = numItems
-                        #delete circle from previous selection
-                        pygame.draw.circle(gameDisplay, white, (display_width/2 - 120, display_height/2), 10)
-                        pygame.draw.circle(gameDisplay, blue, (display_width/2 - 70, display_height/2 + 120), 10)
-                        pygame.display.update()
-                    elif itemSelect == 2:
-                        itemSelect -= 1
-                        pygame.draw.circle(gameDisplay, white, (display_width/2 - 115, display_height/2 + 40), 10)
-                        pygame.draw.circle(gameDisplay, blue, (display_width/2 - 120, display_height/2), 10)
-                        pygame.display.update()
-                    elif itemSelect == 3:
-                        itemSelect -= 1
-                        pygame.draw.circle(gameDisplay, white, (display_width/2 - 80, display_height/2 + 80), 10)
-                        pygame.draw.circle(gameDisplay, blue, (display_width/2 - 115, display_height/2 + 40), 10)
-                        pygame.display.update()
-                    elif itemSelect == numItems:
-                        itemSelect -= 1
-                        pygame.draw.circle(gameDisplay, white, (display_width/2 - 70, display_height/2 + 120), 10)
-                        pygame.draw.circle(gameDisplay, blue, (display_width/2 - 80, display_height/2 + 80), 10)
-                        pygame.display.update()
-                if event.key == pygame.K_DOWN:
-                    if itemSelect == 1:
-                        itemSelect += 1
-                        pygame.draw.circle(gameDisplay, white, (display_width/2 - 120, display_height/2), 10)
-                        pygame.draw.circle(gameDisplay, blue, (display_width/2 - 115, display_height/2 + 40), 10)
-                        pygame.display.update()
-                    elif itemSelect == 2:
-                        itemSelect += 1
-                        pygame.draw.circle(gameDisplay, white, (display_width/2 - 115, display_height/2 + 40), 10)
-                        pygame.draw.circle(gameDisplay, blue, (display_width/2 - 80, display_height/2 + 80), 10)
-                        pygame.display.update()
-                    elif itemSelect == 3:
-                        itemSelect = 4
-                        pygame.draw.circle(gameDisplay, white, (display_width/2 - 80, display_height/2 + 80), 10)
-                        pygame.draw.circle(gameDisplay, blue, (display_width/2 - 70, display_height/2 + 120), 10)
-                        pygame.display.update()
-                    elif itemSelect == numItems:
-                        itemSelect = 1
-                        pygame.draw.circle(gameDisplay, white, (display_width/2 - 70, display_height/2 + 120), 10)
-                        pygame.draw.circle(gameDisplay, blue, (display_width/2 - 120, display_height/2), 10)
-                        pygame.display.update()
-                if event.key == pygame.K_RETURN:
-                    starting = False
-                    #single player
-                    if itemSelect == 1:
-                        singlePlayerClassicGame()
-                    #multiplayer
-                    elif itemSelect == 2:
-                        twoPlayerGame()
-                    #how to play
-                    elif itemSelect == 3:
-                        howToPlay()
-                    #exit game
-                    elif itemSelect == 4:
-                        pygame.quit()
-                        quit()
-                    #exit game
+    itemSelect = textList(-100,
+                            -60,
+                            "Single Player Game",
+                            "Multiplayer Game",
+                            "Hi Scores",
+                            "How To Play",
+                            "Exit Game")
 
-        clock.tick(15)
+    #single player
+    if itemSelect == 1:
+        singlePlayerClassicGame()
+    #multiplayer
+    elif itemSelect == 2:
+        twoPlayerGame()
+    elif itemSelect == 3:
+        highScoresMenu()
+    #how to play
+    elif itemSelect == 4:
+        howToPlay()
+    #exit game
+    elif itemSelect == 5:
+        pygame.quit()
+        quit()
 
 ## FOR TESTING ONLY ##
 ##clearDB()
@@ -513,3 +483,6 @@ quit()
 #should make sure that the apple cannot spawn under the snake
 
 #once the above things are done, its time to make it into an executable
+
+#5)
+#snakes can merge at the head, so it appears that one snake is completely under the other snake
