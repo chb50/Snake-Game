@@ -172,8 +172,7 @@ def twoPlayerGame():
     playerTwo = Snake([], 1, blockSize, 700, 60, 0, blockSize, green)
 
     #initial apple placement will be in center
-    appleX = display_width/2
-    appleY = display_height/2
+    appleX, appleY = apple_spawn(blockSize)
 
     while gameActive:
 
@@ -189,9 +188,16 @@ def twoPlayerGame():
                             red,
                             y_displace = -100,
                             size = "large")
-            message_to_user("Player " + str(playerWon) + " won!",
+
+            if playerWon == 0:
+                message_to_user("Draw!",
                             blue,
                             size = "medium")
+            else:
+                message_to_user("Player " + str(playerWon) + " won!",
+                                blue,
+                                size = "medium")
+                
             message_to_user("press SPACE to play again or ESC to exit",
                             black,
                             y_displace = 100)
@@ -295,6 +301,20 @@ def twoPlayerGame():
                 playerWon = 2
                 gameOver = True
 
+        #detects head on collision of snakes
+        if playerOne.snakeHead == playerTwo.snakeHead:
+            if playerOne.snakeLength > playerTwo.snakeLength:
+                #player 1 wins the collision
+                playerWon = 1
+                gameOver = True
+            elif playerTwo.snakeLength > playerOne.snakeLength:
+                #player 2 wins the collision
+                playerWon = 2
+                gameOver = True
+            else:
+                #if the snakes are the same size, then its a draw
+                gameOver = True
+
         #checks to see if the snake head has ran into the boundaries of the game board
         if playerOne.xCoord < 0 or playerOne.xCoord >= display_width - playerOne.blockSize or playerOne.yCoord < 0 or playerOne.yCoord >= display_height - playerOne.blockSize:
             playerWon = 2
@@ -317,12 +337,12 @@ def twoPlayerGame():
                 for block in playerOne.snakeList:
                     if appleX == block[0] and appleY == block[1]:
                         underSnake = True
-                        appleX, appleY = apple_spawn(playerSnake.blockSize)
+                        appleX, appleY = apple_spawn(playerOne.blockSize)
                         break
                 for block in playerTwo.snakeList:
                     if appleX == block[0] and appleY == block[1]:
                         underSnake = True
-                        appleX, appleY = apple_spawn(playerSnake.blockSize)
+                        appleX, appleY = apple_spawn(playerTwo.blockSize)
                         break
                     
             playerOne.snakeLength += 1
@@ -338,12 +358,12 @@ def twoPlayerGame():
                 for block in playerOne.snakeList:
                     if appleX == block[0] and appleY == block[1]:
                         underSnake = True
-                        appleX, appleY = apple_spawn(playerSnake.blockSize)
+                        appleX, appleY = apple_spawn(playerOne.blockSize)
                         break
                 for block in playerTwo.snakeList:
                     if appleX == block[0] and appleY == block[1]:
                         underSnake = True
-                        appleX, appleY = apple_spawn(playerSnake.blockSize)
+                        appleX, appleY = apple_spawn(playerTwo.blockSize)
                         break
                     
             playerTwo.snakeLength += 1
@@ -515,19 +535,17 @@ quit()
 #1) ### I THINK I FIXED IT BUT THIS WILL BE MONITORED ###
 #there is a bug that causes the snake to turn in on itself if 2 inputs are made at the same time that are not in opposite directions
 #and one of the 2 inputs are the opposite direction of the current direction of motion of the snake (i.e. right + up while the sanke is moving down)
-#   this is possibly due to the game accepting multiple inputs on each frame
+#   this is possibly due to the game accepting multiple inputs on each frame  ### DONE ###
 
 #2)
 #multiplayer has not been extensively tested yet, gotta do that and figure out its behaviors
-#   the bug that exists above for single player also exists for multiplayer
+#   the bug that exists above for single player also exists for multiplayer  ### DONE ###
 
 #3)
-#Have a high score selection so that the user can see their high scores
+#Have a high score selection so that the user can see their high scores  ### DONE ###
 
 #4)
-#should make sure that the apple cannot spawn under the snake
-
-#once the above things are done, its time to make it into an executable
+#should make sure that the apple cannot spawn under the snake  ### DONE ###
 
 #5)
-#snakes can merge at the head, so it appears that one snake is completely under the other snake
+#multiplayer: snakes can merge at the head, so it appears that one snake is completely under the other snake ### DONE ###
