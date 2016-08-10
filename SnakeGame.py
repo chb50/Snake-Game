@@ -11,7 +11,7 @@ from SnakeGameClasses import *
 
 pygame.init()
 
-pygame.display.set_caption('Cedric\'s Snake Game')
+pygame.display.set_caption('Snake Mania')
                     
 def singlePlayerClassicGame():
 
@@ -130,6 +130,17 @@ def singlePlayerClassicGame():
         #each apple eaten
         if apple_x == playerSnake.xCoord and apple_y == playerSnake.yCoord:
             apple_x, apple_y = apple_spawn(playerSnake.blockSize)
+            underSnake = True
+
+            #tests if the apple was placed under the snake
+            while underSnake:
+                underSnake = False
+                for block in playerSnake.snakeList:
+                    if apple_x == block[0] and apple_y == block[1]:
+                        underSnake = True
+                        apple_x, apple_y = apple_spawn(playerSnake.blockSize)
+                        break
+                    
             playerSnake.snakeLength += 1
 
         #keeps the score
@@ -297,10 +308,44 @@ def twoPlayerGame():
         #each apple eaten
         if appleX == playerOne.xCoord and appleY == playerOne.yCoord:
             appleX, appleY = apple_spawn(playerOne.blockSize)
+
+            underSnake = True
+
+            #tests if the apple was placed under the snake
+            while underSnake:
+                underSnake = False
+                for block in playerOne.snakeList:
+                    if appleX == block[0] and appleY == block[1]:
+                        underSnake = True
+                        appleX, appleY = apple_spawn(playerSnake.blockSize)
+                        break
+                for block in playerTwo.snakeList:
+                    if appleX == block[0] and appleY == block[1]:
+                        underSnake = True
+                        appleX, appleY = apple_spawn(playerSnake.blockSize)
+                        break
+                    
             playerOne.snakeLength += 1
 
         if appleX == playerTwo.xCoord and appleY == playerTwo.yCoord:
             appleX, appleY = apple_spawn(playerTwo.blockSize)
+
+            underSnake = True
+
+            #tests if the apple was placed under the snake
+            while underSnake:
+                underSnake = False
+                for block in playerOne.snakeList:
+                    if appleX == block[0] and appleY == block[1]:
+                        underSnake = True
+                        appleX, appleY = apple_spawn(playerSnake.blockSize)
+                        break
+                for block in playerTwo.snakeList:
+                    if appleX == block[0] and appleY == block[1]:
+                        underSnake = True
+                        appleX, appleY = apple_spawn(playerSnake.blockSize)
+                        break
+                    
             playerTwo.snakeLength += 1
 
         #DONT FORGET TO UPDATE DISPLAY
